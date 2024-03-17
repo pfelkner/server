@@ -11,7 +11,7 @@ router.get("/start", async (req, res) => {
 });
 
 router.get("/nextRound", async (req, res) => {
-  const data = gs.game?.getRoundData();
+  const data = await gs.game?.getRoundData();
   console.log("nextRound".repeat(20));
   console.log(data);
   console.log("nextRound".repeat(20));
