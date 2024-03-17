@@ -43,10 +43,10 @@ export class Game {
   start() {
     const roundData = this.handle(this._countries);
     this._countries = roundData.countries;
-    console.log(this._countries.length);
     this.options = roundData.options;
     this.country = roundData.country;
     this.code = roundData.code;
+    console.log("GAME START", roundData);
   }
 
   stop(userId: number) {
