@@ -61,6 +61,7 @@ export class Game {
     this.options = roundData.options;
     this.country = roundData.country;
     this.code = roundData.code;
+    console.log("called game next");
   }
 
   getRoundData = () => {
