@@ -19,7 +19,7 @@ export const getUsers = async (): Promise<UserEntity[]> => {
   return data;
 };
 
-// TODO: write generic helper function to get user by field (handle error, get first element)
+// TODO: write generic helper function to get user by field (handle error, get first element) xx
 
 export const getUserById = async (id: number): Promise<any> => {
   const { data, error } = await supabase.from("User").select().eq("id", id);
