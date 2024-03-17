@@ -5,7 +5,6 @@ import {
   getScores,
   ScoreEntity,
 } from "../services/db-service";
-import { get } from "lodash";
 
 const router = Router();
 
