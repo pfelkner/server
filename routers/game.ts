@@ -1,11 +1,5 @@
 import { GameService } from "./../services/game";
-import { Score } from "@prisma/client";
 import { Router } from "express";
-import {
-  getPlayerScore,
-  updatePlayerScore,
-  getScores,
-} from "../services/db-service";
 
 const router = Router();
 const gs = GameService.getInstance();

@@ -1,9 +1,5 @@
 import { Game } from "./../api/game";
-import { PrismaClient, Score, User } from "@prisma/client";
 import countries from "../assets/with-difficulty.json";
-import game from "../routers/game";
-
-const prisma = new PrismaClient();
 
 export interface CurrentGame {
   userId: number;
@@ -38,16 +34,5 @@ export class GameService {
 
   inProgress = (game: Game): boolean => {
     return false;
-  };
-
-  updatePlayerScore = async (
-    userId: number,
-    newScore: number
-  ): Promise<Score> => {
-    const updatedScore = await prisma.score.update({
-      where: { userId: userId },
-      data: { highestStreak: newScore },
-    });
-    return updatedScore;
   };
 }
