@@ -46,7 +46,12 @@ export class Game {
     this.options = roundData.options;
     this.country = roundData.country;
     this.code = roundData.code;
-    console.log("GAME START", roundData);
+    console.log(
+      "GAME START",
+      roundData.options,
+      roundData.country,
+      roundData.code
+    );
   }
 
   stop(userId: number) {
