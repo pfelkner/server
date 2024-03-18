@@ -19,8 +19,10 @@ export const getUsers = async (): Promise<UserEntity[]> => {
   return data;
 };
 
+// function genericTest<T>(a: T, b: V): T {
+//   return await supabase.from(a).select().eq(b, b);
+// }
 // TODO: write generic helper function to get user by field (handle error, get first element) xx
-
 export const getUserById = async (id: number): Promise<any> => {
   const { data, error } = await supabase.from("User").select().eq("id", id);
 
@@ -102,5 +104,60 @@ export const getCountries = async () => {
     return data;
   } catch (error) {
     console.error("getCountries:Error fetching data:", error);
+  }
+};
+export const createGame = async (game: any) => {
+  const { data, error } = await supabase.from("CurrentGame").insert([
+    {
+      userId: game.userId,
+      answers: game.answers,
+      accuracy: game.accuracy,
+      lives: game.lives,
+      currentStreak: game.currentStreak,
+    },
+  ]);
+  if (error) throw error;
+};
+
+export const updateGame = async (game: any) => {
+  const { data, error } = await supabase
+    .from("CurrentGame")
+    .update({
+      answers: game.answers,
+      accuracy: game.accuracy,
+      lives: game.lives,
+      currentStreak: game.currentStreak,
+    })
+    .eq("userId", game.userId);
+  if (error) throw error;
+};
+
+export const saveGame = async (currentGame: any) => {
+  try {
+    const currentGames = await supabase.from("CurrentGame").select();
+    const hasCurrentGame = await currentGames.data?.find(
+      (cg) => cg.userId === currentGame.userId
+    );
+    if (!hasCurrentGame) {
+      await createGame(currentGame);
+    } else {
+      await updateGame(currentGame);
+    }
+  } catch (error) {
+    console.error("saveGame:Error fetching data:", error);
+  }
+};
+
+export const getCurrentGame = async (userId: string) => {
+  console.log("getting current game for user: ", userId);
+  try {
+    const currentGame: any = await supabase
+      .from("CurrentGame")
+      .select()
+      .eq("userId", userId);
+
+    return currentGame.data[0];
+  } catch (error) {
+    console.error("getCurrentGame:Error fetching data:", error);
   }
 };
