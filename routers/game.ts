@@ -1,3 +1,4 @@
+import { getCountries } from "../services/db-service";
 import { GameService } from "./../services/game";
 import { Router } from "express";
 
@@ -27,6 +28,11 @@ router.post("/gameover", async (req, res) => {
   gs.game?.stop(userId);
   // game.stop();
   // game = new Game(countries);
+});
+
+router.get("/countries", async (_, res) => {
+  const countries = await getCountries();
+  res.json(countries);
 });
 
 export default router;

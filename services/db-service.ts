@@ -92,3 +92,14 @@ export const updatePlayerScore = async (
     throw error;
   }
 };
+
+export const getCountries = async () => {
+  try {
+    const { data, error } = await supabase.from("Country").select();
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("getCountries:Error fetching data:", error);
+    // throw error;
+  }
+};
