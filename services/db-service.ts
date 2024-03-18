@@ -38,17 +38,22 @@ export const createUser = async (
   name: string,
   password: string
 ): Promise<any> => {
-  const { data: userData, error: userError } = await supabase
-    .from("User")
-    .insert([{ name, password }]);
+  try {
+    const { data: userData, error: userError } = await supabase
+      .from("User")
+      .insert([{ name, password }]);
 
-  if (userError || !userData) throw userError;
-  const newUser: UserEntity = userData[0];
-  const { data: scoreData, error: scoreError } = await supabase
-    .from("Score")
-    .insert([{ userId: newUser.id, highestStreak: 0 }]);
+    if (userError) throw userError;
+    const newUser = (await supabase.from("User").select().eq("name", name))
+      .data![0];
+    const { data: scoreData, error: scoreError } = await supabase
+      .from("Score")
+      .insert([{ userId: newUser.id, highestStreak: 0 }]);
 
-  if (scoreError) throw scoreError;
+    if (scoreError) throw scoreError;
+  } catch (error) {
+    console.error("createUser:Error fetching data:", error);
+  }
 };
 
 export const getScores = async (): Promise<ScoreEntity[]> => {
@@ -84,9 +89,6 @@ export const updatePlayerScore = async (
       .eq("userId", userId);
 
     if (error) throw error;
-    // if (!data) throw new Error("No data returned from update operation");
-
-    // return data[0];
   } catch (error) {
     console.error("updatePlayerScore:Error fetching data:", error);
     throw error;
@@ -100,6 +102,5 @@ export const getCountries = async () => {
     return data;
   } catch (error) {
     console.error("getCountries:Error fetching data:", error);
-    // throw error;
   }
 };
