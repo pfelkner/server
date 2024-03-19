@@ -11,7 +11,8 @@ const router = Router();
 
 router.post("/saveGame", async (req, res) => {
   console.log("/saveGame", req.body);
-  saveGame(req.body);
+  const gameOver: boolean = await saveGame(req.body);
+  res.send(gameOver);
 });
 
 router.get("/current/:userId", async (req, res) => {

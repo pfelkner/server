@@ -169,29 +169,36 @@ export const updateGame = async (game: any) => {
   }
 };
 
-export const saveGame = async (currentGame: any) => {
+export const saveGame = async (currentGame: any): Promise<boolean> => {
   try {
     const currentGames = await supabase.from("CurrentGame").select();
     const hasCurrentGame = await currentGames.data?.find(
       (cg) => cg.userId === currentGame.userId
     );
-    console.log("Saving curretn game".repeat(20));
-    console.log(currentGame);
-    console.log("Saving curretn game".repeat(20));
     let saveGame = {
       ...currentGame,
       updatedAt: new Date(),
     };
 
-    console.log("savegame:", saveGame);
     if (!hasCurrentGame) {
+      console.log("creatign new current game", currentGame);
       await createGame(currentGame);
+      console.log("created game", currentGame);
+      return false;
     } else {
-      if (currentGame.lives < 1) await archiveGame(currentGame);
-      else await updateGame(currentGame);
+      if (currentGame.lives < 1) {
+        await archiveGame(currentGame);
+        console.log("archiving game", currentGame);
+        return true;
+      } else {
+        await updateGame(currentGame);
+        console.log("updating game", currentGame);
+        return false;
+      }
     }
   } catch (error) {
     console.error("saveGame:Error fetching data:", error);
+    return false;
   }
 };
 
