@@ -19,16 +19,6 @@ router.get("/current/:userId", async (req, res) => {
   res.json(currentGame);
 });
 
-router.get("/gameover/:userId", async (req, res) => {
-  const currentGame = await getCurrentGame(req.params.userId);
-  try {
-    await archiveGame(currentGame);
-  } catch (error) {
-    console.error("Error archiving game", error);
-  }
-  await removeCurrentGame(currentGame.userId);
-});
-
 router.get("/countries", async (_, res) => {
   const countries = await getCountries();
   res.json(countries);

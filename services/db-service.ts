@@ -129,19 +129,19 @@ export const createGame = async (game: any) => {
 };
 
 export const archiveGame = async (game: any) => {
-  console.log("archiving".repeat(20));
-  console.log(game);
-  console.log("archiving".repeat(20));
-  // await insertGame("History", game);
-  const { data, error } = await supabase.from("Test").insert([
-    {
-      userId: game.userId,
-      answers: game.answers,
-      accuracy: game.accuracy,
-    },
-  ]);
-  if (error) throw error;
-  console.log("inserted", data);
+  try {
+    const { data, error } = await supabase.from("Test").insert([
+      {
+        userId: game.userId,
+        answers: game.answers,
+        accuracy: game.accuracy,
+      },
+    ]);
+    if (error) throw error;
+    removeCurrentGame(game.userId);
+  } catch (error) {
+    console.error("archiveGame:Error fetching data:", error);
+  }
 };
 
 export const removeCurrentGame = async (userId: string) => {
@@ -182,11 +182,13 @@ export const saveGame = async (currentGame: any) => {
       ...currentGame,
       updatedAt: new Date(),
     };
-    console.log(saveGame);
+
+    console.log("savegame:", saveGame);
     if (!hasCurrentGame) {
       await createGame(currentGame);
     } else {
-      await updateGame(currentGame);
+      if (currentGame.lives < 1) await archiveGame(currentGame);
+      else await updateGame(currentGame);
     }
   } catch (error) {
     console.error("saveGame:Error fetching data:", error);
