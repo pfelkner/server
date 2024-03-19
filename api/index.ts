@@ -21,7 +21,3 @@ app.use(express.json());
 app.listen(PORT, async () => {
   console.log(`[server]: Server is running at http://localhost:${PORT}`);
 });
-
-app.get("/gameover", async (req, res) => {
-  throw new Error("Not implemented");
-});
