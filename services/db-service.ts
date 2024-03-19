@@ -106,30 +106,67 @@ export const getCountries = async () => {
     console.error("getCountries:Error fetching data:", error);
   }
 };
+
+export const insertGame = async (table: string, game: any) => {
+  try {
+    const { data, error } = await supabase.from(table).insert([
+      {
+        userId: game.userId,
+        answers: game.answers,
+        accuracy: game.accuracy,
+        lives: game.lives,
+        currentStreak: game.currentStreak,
+      },
+    ]);
+    if (error) throw error;
+  } catch (error) {
+    console.error(`insertGame:Error inserting data into ${table}`, error);
+  }
+};
+
 export const createGame = async (game: any) => {
-  const { data, error } = await supabase.from("CurrentGame").insert([
+  await insertGame("CurrentGame", game);
+};
+
+export const archiveGame = async (game: any) => {
+  console.log("archiving".repeat(20));
+  console.log(game);
+  console.log("archiving".repeat(20));
+  // await insertGame("History", game);
+  const { data, error } = await supabase.from("Test").insert([
     {
       userId: game.userId,
       answers: game.answers,
       accuracy: game.accuracy,
-      lives: game.lives,
-      currentStreak: game.currentStreak,
     },
   ]);
   if (error) throw error;
+  console.log("inserted", data);
+};
+
+export const removeCurrentGame = async (userId: string) => {
+  try {
+    await supabase.from("CurrentGame").delete().eq("userId", userId);
+  } catch (error) {
+    console.error("removeCurrentGame:Error fetching data:", error);
+  }
 };
 
 export const updateGame = async (game: any) => {
-  const { data, error } = await supabase
-    .from("CurrentGame")
-    .update({
-      answers: game.answers,
-      accuracy: game.accuracy,
-      lives: game.lives,
-      currentStreak: game.currentStreak,
-    })
-    .eq("userId", game.userId);
-  if (error) throw error;
+  try {
+    const { data, error } = await supabase
+      .from("CurrentGame")
+      .update({
+        answers: game.answers,
+        accuracy: game.accuracy,
+        lives: game.lives,
+        currentStreak: game.currentStreak,
+      })
+      .eq("userId", game.userId);
+    if (error) throw error;
+  } catch (error) {
+    console.error("updateGame:Error fetching data:", error);
+  }
 };
 
 export const saveGame = async (currentGame: any) => {
@@ -138,6 +175,14 @@ export const saveGame = async (currentGame: any) => {
     const hasCurrentGame = await currentGames.data?.find(
       (cg) => cg.userId === currentGame.userId
     );
+    console.log("Saving curretn game".repeat(20));
+    console.log(currentGame);
+    console.log("Saving curretn game".repeat(20));
+    let saveGame = {
+      ...currentGame,
+      updatedAt: new Date(),
+    };
+    console.log(saveGame);
     if (!hasCurrentGame) {
       await createGame(currentGame);
     } else {
