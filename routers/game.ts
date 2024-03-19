@@ -1,4 +1,10 @@
-import { getCountries, getCurrentGame, saveGame } from "../services/db-service";
+import {
+  archiveGame,
+  getCountries,
+  getCurrentGame,
+  removeCurrentGame,
+  saveGame,
+} from "../services/db-service";
 import { Router } from "express";
 
 const router = Router();
@@ -13,8 +19,14 @@ router.get("/current/:userId", async (req, res) => {
   res.json(currentGame);
 });
 
-router.post("/gameover", async (req, res) => {
-  throw new Error("Not implemented");
+router.get("/gameover/:userId", async (req, res) => {
+  const currentGame = await getCurrentGame(req.params.userId);
+  try {
+    await archiveGame(currentGame);
+  } catch (error) {
+    console.error("Error archiving game", error);
+  }
+  await removeCurrentGame(currentGame.userId);
 });
 
 router.get("/countries", async (_, res) => {
