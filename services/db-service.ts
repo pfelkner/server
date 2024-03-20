@@ -131,12 +131,12 @@ export const createGame = async (game: any) => {
 
 export const archiveGame = async (game: any) => {
   try {
-    const { data, error } = await supabase.from("Test").insert([
+    const { data, error } = await supabase.from("History").insert([
       {
         userId: game.userId,
         answers: game.answers,
         accuracy: game.accuracy,
-        prevCountries: game.prevCountries,
+        countries: game.prevCountries,
       },
     ]);
     if (error) throw error;
