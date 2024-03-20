@@ -1,10 +1,4 @@
-import {
-  archiveGame,
-  getCountries,
-  getCurrentGame,
-  removeCurrentGame,
-  saveGame,
-} from "../services/db-service";
+import { getCountries, getCurrentGame, saveGame } from "../services/db-service";
 import { Router } from "express";
 
 const router = Router();

@@ -116,6 +116,7 @@ export const insertGame = async (table: string, game: any) => {
         accuracy: game.accuracy,
         lives: game.lives,
         currentStreak: game.currentStreak,
+        prevCountries: game.prevCountries,
       },
     ]);
     if (error) throw error;
@@ -135,6 +136,7 @@ export const archiveGame = async (game: any) => {
         userId: game.userId,
         answers: game.answers,
         accuracy: game.accuracy,
+        prevCountries: game.prevCountries,
       },
     ]);
     if (error) throw error;
@@ -161,6 +163,7 @@ export const updateGame = async (game: any) => {
         accuracy: game.accuracy,
         lives: game.lives,
         currentStreak: game.currentStreak,
+        prevCountries: game.prevCountries,
       })
       .eq("userId", game.userId);
     if (error) throw error;
