@@ -22,7 +22,8 @@ router.post("/signin", async (req, res) => {
     return;
   }
 
-  res.json(user);
+  const { password, ...userWithoutPassword } = user;
+  res.json(userWithoutPassword);
 });
 
 router.post("/signup", async (req, res) => {
