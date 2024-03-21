@@ -134,9 +134,10 @@ export const archiveGame = async (game: any) => {
     const { data, error } = await supabase.from("History").insert([
       {
         userId: game.userId,
-        answers: game.answers,
         accuracy: game.accuracy,
         countries: game.prevCountries,
+        correct: game.answers.correct,
+        incorrect: game.answers.incorrect,
       },
     ]);
     if (error) throw error;
@@ -216,5 +217,18 @@ export const getCurrentGame = async (userId: string) => {
     return currentGame.data[0];
   } catch (error) {
     console.error("getCurrentGame:Error fetching data:", error);
+  }
+};
+
+export const getStatsById = async (userId: string): Promise<any> => {
+  console.log("getting stats for user");
+  try {
+    const stats: any = await supabase
+      .from("History")
+      .select()
+      .eq("userId", userId);
+    return stats;
+  } catch (error) {
+    console.error("getStat: Error fetching stats");
   }
 };
