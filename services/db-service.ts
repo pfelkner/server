@@ -53,6 +53,7 @@ export const createUser = async (
       .insert([{ userId: newUser.id, highestStreak: 0 }]);
 
     if (scoreError) throw scoreError;
+    return newUser;
   } catch (error) {
     console.error("createUser:Error fetching data:", error);
   }
@@ -174,6 +175,7 @@ export const updateGame = async (game: any) => {
 };
 
 export const saveGame = async (currentGame: any): Promise<boolean> => {
+  console.log("saving game", currentGame);
   try {
     const currentGames = await supabase.from("CurrentGame").select();
     const hasCurrentGame = await currentGames.data?.find(
